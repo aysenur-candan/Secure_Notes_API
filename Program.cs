@@ -8,6 +8,7 @@ using SecureNotesAPI.Services;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+
 DotNetEnv.Env.Load();
 builder.Configuration.AddEnvironmentVariables();
 var jwtKey = Environment.GetEnvironmentVariable("JWT_KEY");
@@ -36,13 +37,14 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_KEY"))
+                Encoding.UTF8.GetBytes(jwtKey)
             )
         };
     });
 
 builder.Services.AddAuthorization();
 builder.Services.AddControllers();
+
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "SecureNotesApi", Version = "v1" });
@@ -70,6 +72,26 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddScoped<NoteService>();
 builder.Services.AddScoped<TokenService>();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        if (environment == "Development")
+        {
+            policy.AllowAnyOrigin()
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        }
+        else
+        {
+            policy.WithOrigins("https://frontenddomain.com")
+                  .AllowAnyHeader()
+                  .AllowAnyMethod()
+                  .AllowCredentials();
+        }
+    });
+});
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
@@ -77,6 +99,8 @@ if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors("AllowFrontend");
 
 app.UseAuthentication();
 app.UseAuthorization();
