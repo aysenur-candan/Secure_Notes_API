@@ -84,7 +84,7 @@ builder.Services.AddCors(options =>
         }
         else
         {
-            policy.WithOrigins("https://frontenddomain.com")
+            policy.WithOrigins("*")
                   .AllowAnyHeader()
                   .AllowAnyMethod()
                   .AllowCredentials();
