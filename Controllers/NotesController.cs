@@ -20,7 +20,6 @@ namespace SecureNotesApi.Controllers
         {
             this.noteService = noteService;
         }
-
         private Guid GetUserIdFromToken()
         {
             var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);

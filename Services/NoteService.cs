@@ -12,12 +12,10 @@ namespace SecureNotesAPI.Services
     public class NoteService : INoteService
     {
         private readonly AppDbContext dbContext;
-
         public NoteService(AppDbContext dbContext)
         {
             this.dbContext = dbContext;
         }
-
         public async Task<Note> NoteCreate(NoteCreateDto dto, Guid userId)
         {
             var not = new Note
@@ -76,6 +74,4 @@ namespace SecureNotesAPI.Services
             return true;
         }
     }
-
-
 }

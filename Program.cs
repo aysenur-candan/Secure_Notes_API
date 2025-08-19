@@ -8,11 +8,9 @@ using SecureNotesAPI.Services;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
-
 DotNetEnv.Env.Load();
 builder.Configuration.AddEnvironmentVariables();
 var jwtKey = Environment.GetEnvironmentVariable("JWT_KEY");
-
 var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production";
 var rawConnectionString = Environment.GetEnvironmentVariable("POSTGRES_CONNECTION");
 
@@ -44,11 +42,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization();
 builder.Services.AddControllers();
-
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "SecureNotesApi", Version = "v1" });
-
     var securityScheme = new OpenApiSecurityScheme
     {
         Name = "Authorization",
@@ -71,7 +67,6 @@ builder.Services.AddSwaggerGen(c =>
 
 builder.Services.AddScoped<NoteService>();
 builder.Services.AddScoped<TokenService>();
-
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
@@ -87,7 +82,6 @@ builder.Services.AddCors(options =>
             policy.AllowAnyOrigin()
                   .AllowAnyHeader()
                   .AllowAnyMethod();
-  
         }
     });
 });
@@ -101,12 +95,8 @@ if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 }
 
 app.UseCors("AllowFrontend");
-
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.MapGet("/", () => Results.Json(new { status = "ok" }));
-
 app.Run();

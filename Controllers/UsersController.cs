@@ -10,14 +10,12 @@ using System.Threading.Tasks;
 
 namespace SecureNotesApi.Controllers
 {
-   
     [ApiController]
     [Route("api/[controller]")]
     public class UsersController : ControllerBase
     {
         private readonly AppDbContext _context;
         private readonly TokenService _tokenService;
-
         public UsersController(AppDbContext context, TokenService tokenService)
         {
             _context = context;
@@ -31,14 +29,12 @@ namespace SecureNotesApi.Controllers
                 return BadRequest("Username or email address is already registered.");
 
             string passwordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password);
-
             var user = new User
             {
                 UserName = dto.Username,
                 Email = dto.Email,
                 PasswordHash = passwordHash
             };
-
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
             return Ok(new

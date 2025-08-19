@@ -11,11 +11,8 @@ namespace SecureNotesAPI.Factories
         public AppDbContext CreateDbContext(string[] args)
         {
             Env.Load();
-
             var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
-        
             var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production";
-
             var rawConnectionString = Environment.GetEnvironmentVariable("POSTGRES_CONNECTION");
 
             if (string.IsNullOrWhiteSpace(rawConnectionString))
@@ -29,7 +26,6 @@ namespace SecureNotesAPI.Factories
             optionsBuilder.UseNpgsql(rawConnectionString);
             return new AppDbContext(optionsBuilder.Options);
         }
-
         private string OverrideHostAndPort(string connectionString, string newHost, string newPort)
         {
             connectionString = Regex.Replace(connectionString, @"Host=\s*[^;]+", $"Host={newHost}", RegexOptions.IgnoreCase);

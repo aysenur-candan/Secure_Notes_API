@@ -10,7 +10,6 @@ namespace SecureNotesAPI.DTOs
 
         [Required]
         public string Title { get; set; }
-
         public string Content { get; set; }
     }
 }

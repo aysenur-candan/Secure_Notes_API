@@ -12,12 +12,10 @@ namespace SecureNotesAPI.Services
     public class TokenService
     {
         private readonly IConfiguration _configuration;
-
         public TokenService(IConfiguration configuration)
         {
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
-
         public string GenerateToken(User user)
         {
             var claims = new List<Claim>
